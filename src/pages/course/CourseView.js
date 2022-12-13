@@ -14,10 +14,12 @@ import {
   SessionCard,
 } from "../../components/organisms"
 
+import { Modal } from "../../components/molecules"
+
 import { ReactComponent as AddIcon } from "../../assets/icons/Add.svg"
 
 const CourseBody = styled.div`
-  max-width: 1100px;
+  max-width: 1300px;
   margin: auto;
   @media (max-width: 768px) {
     margin: 0px 15px;
@@ -25,7 +27,7 @@ const CourseBody = styled.div`
 `
 
 const CourseFooter = styled.div`
-  max-width: 1100px;
+  max-width: 1300px;
   margin: auto;
   text-align: right;
   @media (max-width: 768px) {
@@ -52,9 +54,12 @@ export default function CourseView({
   handleTitleSession,
   handleDeleteSession,
   handleAddLesson,
+  handleEditLesson,
+  handleDeleteLesson,
 }) {
   return (
     <>
+      <Modal />
       <Header title="Event" />
       <CourseBody>
         <CourseEvent>
@@ -107,6 +112,8 @@ export default function CourseView({
                                           <LessonCard
                                             data={lesson}
                                             dragHandleProps={providedLesson.dragHandleProps}
+                                            handleEditLesson={() => handleEditLesson(lesson.id)}
+                                            handleDeleteLesson={() => handleDeleteLesson(lesson.id, item.id)}
                                           />
                                         </div>
                                       )}

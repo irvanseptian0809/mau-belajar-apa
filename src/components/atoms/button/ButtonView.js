@@ -24,6 +24,9 @@ const Button = styled.button`
     background: #7800EF;
     color: white;
   `}
+  ${props => props.fullWidth && css`
+    width: 100%;
+  `}
 `
 
 export default function ButtonView({

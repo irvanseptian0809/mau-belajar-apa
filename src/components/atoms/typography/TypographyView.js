@@ -22,14 +22,10 @@ const Typography = styled.div`
 
 export default function TypographyView({
   children,
-  size,
-  color,
-  weight,
+  ...otherProps
 }) {
   return <Typography
-    size={size}
-    color={color}
-    weight={weight}
+    {...otherProps}
   >
     {children}
   </Typography> 

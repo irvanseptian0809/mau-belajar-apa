@@ -15,7 +15,7 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  max-width: 1100px;
+  max-width: 1300px;
   margin: auto;
   display: flex;
   height: 92px;

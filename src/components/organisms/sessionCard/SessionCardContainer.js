@@ -1,14 +1,19 @@
+import { useEffect, useState } from "react";
 import SessionCardView from "./SessionCardView";
 
 export default function SessionCardContainer({
+  isEditActive,
   ...otherProps
 }) {
+  const [isTitleEdit, setTitleEdit] = useState(false);
 
-  const handleAddLesson = () => {
+  useEffect(() => {
+    setTitleEdit(true);
+  }, [isEditActive]);
 
-  }
   const props = {
-    handleAddLesson,
+    isTitleEdit,
+    handleTitleEdit: setTitleEdit,
     ...otherProps
   }
   return <SessionCardView {...props} />

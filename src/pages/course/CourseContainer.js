@@ -50,7 +50,6 @@ export default function CourseContainer() {
 
   const handleDeleteSession = (sessionId) => {
     const sessionIndex = sessionList.findIndex((session => session.id == sessionId));
-    const lessonList = sessionList[sessionIndex].lessons;
     let updatedList = [...sessionList];
     updatedList.splice(sessionIndex, 1);
     setSessionList([...updatedList]);
@@ -64,27 +63,31 @@ export default function CourseContainer() {
         {
           id: `SES${dayjs().format('YYYYMMDDhhssSSS')}1`,
           title: `Lesson 1`,
-          type: 'Video',
+          type: 'video',
           time: '24 Oktober 2021, 16:30',
           duration: '06:30 Min',
           isDownloadable: true,
+          isRequired: true,
         },
 
         {
           id: `SES${dayjs().format('YYYYMMDDhhssSSS')}`,
           title: `Lesson 2`,
-          type: 'Video',
+          type: 'map',
           time: '24 Oktober 2021, 16:30',
           duration: '06:30 Min',
+          isRequired: true,
           isDownloadable: true,
+          isPreviewable: true,
         },
 
         {
           id: `SES${dayjs().format('YYYYMMDDhhssSSS')}3`,
           title: `Lesson 5`,
-          type: 'Video',
+          type: 'video',
           time: '24 Oktober 2021, 16:30',
           duration: '06:30 Min',
+          isRequired: true,
           isDownloadable: true,
         }
       ],
@@ -102,7 +105,7 @@ export default function CourseContainer() {
     const lesson = {
       id: `LES${dayjs().format('YYYYMMDDhhssSSS')}`,
       title: `Lesson Tittle`,
-      type: 'Video',
+      type: 'video',
       time: '24 Oktober 2021, 16:30',
       duration: '06:30 Min',
       isDownloadable: true,
@@ -115,10 +118,21 @@ export default function CourseContainer() {
     setSessionList([...updateLessonList]);
   }
 
-  useEffect(() => {
+  const handleEditLesson = (payload) => {
 
-    console.log('sessionList', sessionList)
-  }, [sessionList])
+  }
+
+  const handleDeleteLesson = (lessonId, sessionId) => {
+    const sessionIndex = sessionList.findIndex((session => session.id == sessionId));
+    let updatedList = [...sessionList];
+
+    const lessons = updatedList[sessionIndex].lessons;
+    const lessonIndex = lessons.findIndex((lesson => lesson.id == lessonId));
+    let updatedListLessons = [...lessons];
+    updatedListLessons.splice(lessonIndex, 1);
+    updatedList[sessionIndex].lessons = updatedListLessons;
+    setSessionList([...updatedList]);
+  }
 
   const props = {
     newSession,
@@ -129,6 +143,8 @@ export default function CourseContainer() {
     handleTitleSession,
     handleDeleteSession,
     handleAddLesson,
+    handleEditLesson,
+    handleDeleteLesson,
   }
   return <CourseView {...props} />
 }
