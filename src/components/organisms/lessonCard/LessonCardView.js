@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 import {
   Button,
@@ -26,6 +27,18 @@ const LessonCard = styled.div`
   &:hover {
     background: #FBFAFF;
   }
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+const FlexCenter = styled.div`
+gap: 15px;
+  display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    margin-bottom: 7px;
+  }
 `
 
 const LessonLeftSection = styled.div`
@@ -39,6 +52,9 @@ const LessonRightSection = styled.div`
   gap: 8px;
   display: flex;
   align-items: center;
+  @media (max-width: 768px) {
+    display: block;
+  }
 `
 
 const TextRequired = styled(Typography)`
@@ -47,12 +63,16 @@ const TextRequired = styled(Typography)`
 `
 
 const Dot = styled.span`
+  display: block;
   height: 7px;
   width: 7px;
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;
   margin: 0 10px;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const ButtonOption = styled(Button)`
@@ -87,19 +107,23 @@ export default function LessonCardView({
           {data.isPreviewable && <><Dot/><Typography color="#8189A2">Previewable</Typography></>}
         </LessonLeftSection>
         <LessonRightSection>
-          <TimeIcon />
-          <Typography>24 Oktober 2021, 16:30</Typography>
-          <Dot/>
+          <FlexCenter>
+            <TimeIcon />
+            <Typography>{dayjs(data.datetime).format('DD MMMM YYYY, hh:mm')}</Typography>
+            <Dot/>
+          </FlexCenter>
 
-          <TimeIcon />
-          <Typography>06:30 Min</Typography>
-          <Dot/>
+          <FlexCenter>
+            <TimeIcon />
+            <Typography>{dayjs(data.time).format('hh:mm')}</Typography>
+          </FlexCenter>
 
           {data.isDownloadable && (
-            <>
+            <FlexCenter>
+              <Dot/>
               <DownloadIcon />
               <Typography>Downloadable</Typography>
-            </>
+            </FlexCenter>
           )}
           <Dropdown label={<VerticalOptionIcon />}>
             <ButtonOption onClick={handleEditLesson}>Edit</ButtonOption>

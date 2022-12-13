@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import {
@@ -14,9 +14,13 @@ import {
   SessionCard,
 } from "../../components/organisms"
 
-import { Modal } from "../../components/molecules"
+import {
+  Empty,
+  Modal,
+} from "../../components/molecules"
 
 import { ReactComponent as AddIcon } from "../../assets/icons/Add.svg"
+import { ReactComponent as EyeIcon } from "../../assets/icons/Eye.svg"
 
 const CourseBody = styled.div`
   max-width: 1300px;
@@ -45,7 +49,37 @@ const ButtonAddSession = styled.div`
   gap: 8px;
 `
 
+const ButtonPreview = styled(Button)`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+`
+
+const CourseHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: auto;
+  margin-top: 50px;
+  @media (max-width: 768px) {
+    margin: 0px 15px;
+    display: block;
+  }
+`
+
+const CourseHeaderInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  @media (max-width: 768px) {
+    display: block;
+    margin-bottom: 15px;
+  }
+`
+
 export default function CourseView({
+  selectedLesson,
   newSession,
   sessionList,
   handleDropSession,
@@ -53,7 +87,7 @@ export default function CourseView({
   handleDropLesson,
   handleTitleSession,
   handleDeleteSession,
-  handleAddLesson,
+  handleUpdateLesson,
   handleEditLesson,
   handleDeleteLesson,
 }) {
@@ -61,6 +95,15 @@ export default function CourseView({
     <>
       <Modal />
       <Header title="Event" />
+      <CourseHeader>
+        <CourseHeaderInfo>
+          <Typography size={32} weight={500}>Belajar dan praktek cinematic videography</Typography>
+          <Typography size={12} weight={500} color="#8189A2">Last edited 18 October 2021 | 13:23</Typography>
+        </CourseHeaderInfo>
+        <ButtonPreview primary outlined>
+          <EyeIcon /> Preview
+        </ButtonPreview>
+      </CourseHeader>
       <CourseBody>
         <CourseEvent>
           <Typography>Event Schedule: 14 Desember 2022, 16:30</Typography>
@@ -72,63 +115,82 @@ export default function CourseView({
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {sessionList.map((item, indexSession) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={item.id}
-                    index={indexSession}
-                  >
-                    {(provided) => (
-                      <div 
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
+                {sessionList.length === 0 ? (
+                  <Empty>
+                    <Typography size={24} weight={600}>Empty Session</Typography>
+                    <Typography>Please add some session to create event.</Typography>
+                  </Empty>
+                ) : (
+                  <>
+                    {sessionList.map((item, indexSession) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={indexSession}
                       >
-                        <SessionCard
-                          title={item.title}
-                          dragHandleProps={provided.dragHandleProps}
-                          handleTitleSession={(e) => handleTitleSession(e, item.id)}
-                          isEditActive={newSession.id === item.id}
-                          handleDeleteSession={() => handleDeleteSession(item.id)}
-                          handleAddLesson={() => handleAddLesson(item.id)}
-                        >
-                          <DragDropContext onDragEnd={(e) => handleDropLesson(e, item.id)}>
-                            <Droppable droppableId="drop-lesson">
-                              {(providedLesson) => (
-                                <div
-                                  {...providedLesson.droppableProps}
-                                  ref={providedLesson.innerRef}
-                                >
-                                  {item.lessons.map((lesson, indexLesson) => (
-                                    <Draggable
-                                      key={lesson.id}
-                                      draggableId={lesson.id}
-                                      index={indexLesson}
+                        {(provided) => (
+                          <div 
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                          >
+                            <SessionCard
+                              title={item.title}
+                              dragHandleProps={provided.dragHandleProps}
+                              handleTitleSession={(e) => handleTitleSession(e, item.id)}
+                              isEditActive={newSession.id === item.id}
+                              handleDeleteSession={() => handleDeleteSession(item.id)}
+                              handleUpdateLesson={(e) => handleUpdateLesson(item.id, e)}
+                              selectedLesson={selectedLesson}
+                            >
+                              <DragDropContext onDragEnd={(e) => handleDropLesson(e, item.id)}>
+                                <Droppable droppableId="drop-lesson">
+                                  {(providedLesson) => (
+                                    <div
+                                      {...providedLesson.droppableProps}
+                                      ref={providedLesson.innerRef}
                                     >
-                                      {(providedLesson) => (
-                                        <div 
-                                          ref={providedLesson.innerRef}
-                                          {...providedLesson.draggableProps}
-                                        >
-                                          <LessonCard
-                                            data={lesson}
-                                            dragHandleProps={providedLesson.dragHandleProps}
-                                            handleEditLesson={() => handleEditLesson(lesson.id)}
-                                            handleDeleteLesson={() => handleDeleteLesson(lesson.id, item.id)}
-                                          />
-                                        </div>
+                                      {item.lessons.length === 0 ? (
+                                        <Empty>
+                                          <Typography size={24} weight={600}>Empty Lesson</Typography>
+                                          <Typography>Please add some lesson into session to create event.</Typography>
+                                        </Empty>
+                                      ) : (
+                                        <>
+                                          {item.lessons.map((lesson, indexLesson) => (
+                                            <Draggable
+                                              key={lesson.id}
+                                              draggableId={lesson.id}
+                                              index={indexLesson}
+                                            >
+                                              {(providedLesson) => (
+                                                <div 
+                                                  ref={providedLesson.innerRef}
+                                                  {...providedLesson.draggableProps}
+                                                >
+                                                  <LessonCard
+                                                    data={lesson}
+                                                    dragHandleProps={providedLesson.dragHandleProps}
+                                                    handleEditLesson={() => handleEditLesson(lesson)}
+                                                    handleDeleteLesson={() => handleDeleteLesson(lesson.id, item.id)}
+                                                  />
+                                                </div>
+                                              )}
+                                            </Draggable>
+                                          ))}
+                                        </>
                                       )}
-                                    </Draggable>
-                                  ))}
-                                  {providedLesson.placeholder}
-                                </div>
-                              )}
-                            </Droppable>
-                          </DragDropContext>
-                        </SessionCard>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                                      {providedLesson.placeholder}
+                                    </div>
+                                  )}
+                                </Droppable>
+                              </DragDropContext>
+                            </SessionCard>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </>
+                )}
                 {provided.placeholder}
               </div>
             )}
@@ -142,8 +204,7 @@ export default function CourseView({
           inline
         >
           <ButtonAddSession>
-            <AddIcon />
-            Add Session
+            <AddIcon /> Add Session
           </ButtonAddSession>
         </Button>
       </CourseFooter>

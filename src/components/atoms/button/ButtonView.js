@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 const Button = styled.button`
   cursor: pointer;
-  background: unset;
+  background: white;
   border: unset;
   padding: 13px 23px;
   border-radius: 8px;
@@ -14,6 +14,10 @@ const Button = styled.button`
     &:hover {
       background: #9c56e0;
     }
+  `}
+
+  ${props => props.disabled && css`
+    background: white;
   `}
 
   ${props => props.outlined && css`
