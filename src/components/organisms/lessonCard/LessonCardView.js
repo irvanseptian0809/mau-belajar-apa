@@ -115,7 +115,7 @@ export default function LessonCardView({
 
           <FlexCenter>
             <TimeIcon />
-            <Typography>{dayjs(data.time).format('hh:mm')}</Typography>
+            <Typography>{data.time}</Typography>
           </FlexCenter>
 
           {data.isDownloadable && (
